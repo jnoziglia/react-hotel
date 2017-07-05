@@ -1,0 +1,84 @@
+body {
+	background-color: #eeeeee;
+}
+
+.search-form {
+	background-color: #fff157;
+	padding: 10px;
+}
+
+.search-form-title {
+	
+}
+
+.search-form input,
+.search-form select {
+	border: 0;
+	border-radius: 4px;
+	height: 30px;
+    padding: 6px 12px;
+    width: 100%;
+}
+
+.search-form button {
+	width: 100%;
+}
+
+.hotel-card {
+	margin-bottom: 15px;
+}
+
+.hotel-card > .row {
+	background-color: white;
+}
+
+.hotel-card .hotel-info-left {
+	background-color: white;
+}
+
+.hotel-card .hotel-rating {
+	padding: 5px;
+	background-color: green;
+}
+
+.hotel-card .hotel-name {
+	font-size: 3rem;
+}
+
+.hotel-card .stars {
+	color: yellow;
+}
+
+.hotel-card .distance {
+	color: gray;
+}
+
+.hotel-card .reccomend {
+	color: green;
+}
+
+.hotel-card .rooms-left {
+	color: red;
+}
+
+.hotel-card .time-left {
+	color: gray;
+}
+
+.hotel-card .hotel-info-right {
+	background-color: #fff157;
+	text-align: center;
+}
+
+.hotel-card .old-price {
+	text-decoration: line-through;
+	color: red;
+}
+
+.hotel-card .old-price > span {
+	color: #444;
+}
+
+.hotel-card .price {
+	font-size: 3rem;
+}
