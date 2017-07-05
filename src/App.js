@@ -59,9 +59,18 @@ class Sidebar extends Component {
   handleButtonClick(e) {
     e.preventDefault();
     var that = this;
+    var query = {
+      origin: 'asd',
+      start: 'asd',
+      end: 'asd',
+      rooms: 'asd',
+      adults: 'asd',
+      minors: 'asd'
+    };
     console.log(this);
     request
     .get('https://api.myjson.com/bins/v0sqv')
+    .query(query)
     .end(function(err, res){
       console.log(res.text);
       console.log(that);
@@ -109,12 +118,27 @@ class Sidebar extends Component {
                 <label for="dest">Donde quieres ir?</label>
                 <select>
                   <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
                 </select>
               </div>
               <div className="col-xs-6">
                 <label for="dest">Donde quieres ir?</label>
                 <select>
+                  <option value="0">0</option>
                   <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
                 </select>
               </div>
             </div>
@@ -247,11 +271,11 @@ class Hotel extends Component {
             <div className="time-left">asd</div>
           </div>
           <div className="col-md-3 hotel-info-right">
-            <div className="free-cancel">asd</div>
+            <div className="free-cancel">{this.formatCancelation(this.props.hotelInfo.freeCancelation)}</div>
             <div className="room-night">Habitacion por noche</div>
             <div className="taxes">Impuestos y tasas no incluidos</div>
-            <div className="old-price">asd</div>
-            <div className="price">$asd</div>
+            <div className="old-price">{this.formatPrice(this.props.hotelInfo.oldPrice)}</div>
+            <div className="price">{this.formatPrice(this.props.hotelInfo.price)}</div>
             <div className="details">
               <button>Ver detalle</button>
             </div>
@@ -275,11 +299,25 @@ class Hotel extends Component {
     switch(roomsLeft) {
       case 1:
         return 'Ultima oportunidad! Queda una sola habitacion!';
-        break;
       case null:
         break;
       default:
         return 'Ultimas '+roomsLeft+' habitaciones';
+    }
+  }
+
+  formatCancelation(freeCancelation) {
+    return this.props.hotelInfo.freeCancelation ? 'Cancele gratis' : null;
+  }
+
+  formatPrice(price) {
+    if(price) {
+      var priceArray = price.toString().split('.');
+      priceArray[0] = Number(priceArray[0]).toLocaleString('es-AR');
+      return (<span>$ <span>{priceArray[0]}<sup>{priceArray[1]}</sup></span></span>)
+    }
+    else {
+      return null;
     }
   }
 }
