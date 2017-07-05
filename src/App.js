@@ -6,7 +6,8 @@ import './bootstrap.css';
 import './font-awesome.min.css';
 import axios from 'axios';
 import request from 'superagent';
-
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 class App extends Component {
   constructor(props) {
@@ -98,11 +99,11 @@ class Sidebar extends Component {
             <div className="row">
               <div className="col-xs-6">
                 <label for="dest">Donde quieres ir?</label>
-                <input type="text" className="form-control" id="dest" placeholder="Donde quieres ir?" />
+                <DatePicker dateFormat="YYYY-MM-DD" />
               </div>
               <div className="col-xs-6">
                 <label for="dest">Donde quieres ir?</label>
-                <input type="text" className="form-control" id="dest" placeholder="Donde quieres ir?" />
+                <DatePicker dateFormat="YYYY-MM-DD" />
               </div>
             </div>
             <div className="row">
