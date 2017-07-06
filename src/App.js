@@ -264,6 +264,11 @@ class Sidebar extends Component {
     return (
       <div className="col-md-3">
         <div className="search-form">
+          <Collapse accordion={true}>
+            <Panel header="Estrellas" headerClass="my-header-class">
+              <StarFilter handleCheckboxClick={this.handleCheckboxClick} />
+            </Panel>
+          </Collapse>
           <div className="search-form-title">Hoteles</div>
           <form>
             <div className="row">

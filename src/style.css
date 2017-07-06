@@ -113,6 +113,10 @@ body {
 	content: '\f077'!important;
 }
 
+.star-filter .rc-collapse-content {
+	padding: 0;
+}
+
 .star-filter .list-group-item {
 	border: none;
 }
