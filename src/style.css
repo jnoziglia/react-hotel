@@ -1,5 +1,14 @@
 body {
-	background-color: #eeeeee;
+	background-color: #eeeeee!important;
+	font-size: 14px;
+}
+
+.container {
+	margin: 20px auto;
+}
+
+.fa-star {
+	color: #ffd324;
 }
 
 .search-form {
@@ -8,7 +17,32 @@ body {
 }
 
 .search-form-title {
-	
+	color: #2D72E1;
+	font-size: 2rem;
+}
+
+.search-form .row {
+	padding-bottom: 10px;
+}
+
+.search-form .reduced-left-padding {
+	padding-left: 5px;
+}
+
+.search-form .reduced-right-padding {
+	padding-right: 5px;
+}
+
+.search-form .react-datepicker__input-container {
+	width: 100%;
+}
+
+.search-form label {
+	color: #666;
+	font-size: 1.7rem;
+	font-weight: normal;
+	margin-bottom: 0px;
+	letter-spacing: -0.5px;
 }
 
 .search-form input,
@@ -22,6 +56,63 @@ body {
 
 .search-form button {
 	width: 100%;
+	margin: 10px 0;
+	padding: 10px 12px;
+	border: none;
+	background-color: #0050d0;
+	color: white;
+	box-shadow: inset 0px -4px 0 0px #0040a7;
+	transition: background-color 0.2s ease-out;
+}
+
+.search-form button:hover {
+	background-color: rgba(0,80,208,0.7);
+	color: white;
+	box-shadow: none;
+}
+
+.search-form button:focus {
+	background-color: #0050d0;
+	color: white;
+}
+
+.search-form button:active {
+	background-color: #3355d9;
+	color: white;
+}
+
+.star-filter {
+	margin-top: 15px;
+}
+
+.star-filter input[type="checkbox"] {
+	margin: 5px 10px 0 0;
+}
+
+.star-filter label {
+	margin-bottom: 0;
+	width: 100%;
+	font-size: 1.2rem;
+	font-weight: normal;
+}
+
+.star-filter .quantity,
+.star-filter .quantity-all {
+	float: right;
+	padding: 4px 0;
+	width: 30px;
+	font-size: 1.2rem;
+	font-weight: normal;
+	text-align: center;
+}
+
+.star-filter .quantity {
+	border: 1px solid #f3f3f3;
+}
+
+.star-filter .quantity-all {
+	background-color: #2d72e1;
+	color: white;
 }
 
 .hotel-card {
@@ -37,16 +128,19 @@ body {
 }
 
 .hotel-card .hotel-rating {
-	padding: 5px;
-	background-color: green;
+	padding: 7px 5px;
+	background-color: #94c327;
+	color: white;
 }
 
 .hotel-card .hotel-name {
-	font-size: 3rem;
+	font-size: 2.75rem;
+	padding-left: 10px;
 }
 
-.hotel-card .stars {
-	color: yellow;
+.hotel-card .stars i {
+	padding-right: 8px;
+	color: #ffe066;
 }
 
 .hotel-card .distance {
@@ -68,6 +162,18 @@ body {
 .hotel-card .hotel-info-right {
 	background-color: #fff157;
 	text-align: center;
+	font-size: 1.25rem;
+	padding-top: 15px;
+	padding-bottom: 15px;
+}
+
+.hotel-card .free-cancel {
+	color: #39c15c;
+	padding-bottom: 10px;
+}
+
+.hotel-card .taxes {
+	color: #cec092;
 }
 
 .hotel-card .old-price {
@@ -79,6 +185,49 @@ body {
 	color: #444;
 }
 
-.hotel-card .price {
+.hotel-card .price > span {
+	font-size: 2.5rem;
+}
+
+.hotel-card .price > span > span {
 	font-size: 3rem;
+}
+
+.hotel-card .price sup {
+	font-size: 55%;
+	top: -0.6em;
+}
+
+.hotel-card .details {
+	padding-top: 15px;
+}
+
+.hotel-card .details button {
+	background-color: #eb1b00;
+	color: white;
+	box-shadow: inset 0px -4px 2px 0px #bc1600;
+	transition: background-color 0.2s ease-out;
+	border: none;
+	padding: 10px 12px;
+}
+
+
+
+@media (min-width: 991px) {
+	.hotel-card .hotel-info-right {
+		height: 275px;
+	}
+}
+
+
+@media (max-width: 768px) {
+	.hotel-card .hotel-name {
+		font-size: 2.25rem;
+	}
+}
+
+@media (max-width: 450px) {
+	.hotel-card .hotel-name {
+		font-size: 2rem;
+	}
 }

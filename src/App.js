@@ -4,10 +4,12 @@ import './App.css';
 import './style.css';
 import './bootstrap.css';
 import './font-awesome.min.css';
-import axios from 'axios';
 import request from 'superagent';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import Collapse from 'rc-collapse';
+var Panel = Collapse.Panel;
+require('rc-collapse/assets/index.css');
 
 class App extends Component {
   constructor(props) {
@@ -97,26 +99,27 @@ class Sidebar extends Component {
               </div>
             </div>
             <div className="row">
-              <div className="col-xs-6">
-                <label for="dest">Donde quieres ir?</label>
+              <div className="col-xs-12">
+                <label for="dest">En que fecha?</label>
+              </div>
+              <div className="col-xs-6 reduced-right-padding">
                 <DatePicker dateFormat="YYYY-MM-DD" />
               </div>
-              <div className="col-xs-6">
-                <label for="dest">Donde quieres ir?</label>
+              <div className="col-xs-6 reduced-left-padding">
                 <DatePicker dateFormat="YYYY-MM-DD" />
               </div>
             </div>
             <div className="row">
-              <div className="col-xs-6">
-                <label for="dest">Donde quieres ir?</label>
+              <div className="col-xs-6 reduced-right-padding">
+                <label for="dest">Habitaciones</label>
                 <select>
                   <option value="1">1</option>
                 </select>
               </div>
             </div>
             <div className="row">
-              <div className="col-xs-6">
-                <label for="dest">Donde quieres ir?</label>
+              <div className="col-xs-6 reduced-right-padding">
+                <label for="dest">Adultos</label>
                 <select>
                   <option value="1">1</option>
                   <option value="2">2</option>
@@ -128,8 +131,8 @@ class Sidebar extends Component {
                   <option value="8">8</option>
                 </select>
               </div>
-              <div className="col-xs-6">
-                <label for="dest">Donde quieres ir?</label>
+              <div className="col-xs-6 reduced-left-padding">
+                <label for="dest">Menores</label>
                 <select>
                   <option value="0">0</option>
                   <option value="1">1</option>
@@ -143,10 +146,13 @@ class Sidebar extends Component {
                 </select>
               </div>
             </div>
-            <button className="btn btn-default" onClick={this.handleButtonClick}>Submit</button>
+            <button className="btn btn-default" onClick={this.handleButtonClick}>Buscar</button>
           </form>
         </div>
         <div className="star-filter">
+          <Collapse accordion={true}>
+            <Panel header="hello" headerClass="my-header-class">this is panel content</Panel>
+          </Collapse>
           <div className="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
             <div className="panel panel-default">
               <div className="panel-heading" role="tab" id="headingOne">
@@ -208,7 +214,7 @@ class StarFilter extends Component {
               <span className="stars">
                 {starIcons}
               </span>
-              <span>3</span>
+              <span className="quantity">3</span>
             </label>
           </li>
         ));
@@ -223,7 +229,7 @@ class StarFilter extends Component {
             <span>
               Todas las estrellas
             </span>
-            <span>3</span>
+            <span className="quantity-all">3</span>
           </label>
         </li>
         {starsArray}
@@ -253,17 +259,21 @@ class HotelList extends Component {
 
 class Hotel extends Component {
   render() {
+    var stars = [];
+    for(var i = 0; i < this.props.hotelInfo.stars; i++) {
+      stars.push(<i className="fa fa-star" aria-hidden="true"></i>);
+    }
     return (
       <div className="hotel-card container-fluid">
         <div className="row">
-          <div className="col-md-9 hotel-info-left">
+          <div className="col-sm-9 hotel-info-left">
             <div className="hotel-title">
               <span className="hotel-rating">{this.props.hotelInfo.rating}</span>
               <span className="hotel-name">{this.props.hotelInfo.name}</span>
             </div>
             <div className="hotel-subtitle">
               <span className="stars">
-                <i className="fa fa-star" aria-hidden="true"></i>
+                {stars}
               </span>
               <span className="distance">{this.formatDistance(this.props.hotelInfo.distanceFromDowntown)} del centro</span>
             </div>
@@ -271,14 +281,14 @@ class Hotel extends Component {
             <div className="rooms-left">{this.formatRooms(this.props.hotelInfo.availableRooms)}</div>
             <div className="time-left">asd</div>
           </div>
-          <div className="col-md-3 hotel-info-right">
+          <div className="col-sm-3 hotel-info-right">
             <div className="free-cancel">{this.formatCancelation(this.props.hotelInfo.freeCancelation)}</div>
             <div className="room-night">Habitacion por noche</div>
             <div className="taxes">Impuestos y tasas no incluidos</div>
             <div className="old-price">{this.formatPrice(this.props.hotelInfo.oldPrice)}</div>
             <div className="price">{this.formatPrice(this.props.hotelInfo.price)}</div>
             <div className="details">
-              <button>Ver detalle</button>
+              <button className="btn btn-default">Ver detalle</button>
             </div>
             <div className="payment-type">Paga al hotel o hasta en 50 cuotas!</div>
           </div>
