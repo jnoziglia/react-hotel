@@ -76,7 +76,6 @@ class Sidebar extends Component {
     this.handleOutDate = this.handleOutDate.bind(this);
     this.handleOrigin = this.handleOrigin.bind(this);
     this.validate = this.validate.bind(this);
-    this.validateOrigin = this.validateOrigin.bind(this);
     console.log(props);
   }
 
@@ -87,11 +86,11 @@ class Sidebar extends Component {
       var that = this;
       var query = {
         origin: this.state.origin,
-        start: 'asd',
-        end: 'asd',
-        rooms: 'asd',
-        adults: 'asd',
-        minors: 'asd'
+        start: (this.state.inDate).format('YYYY-MM-DD'),
+        end: (this.state.outDate).format('YYYY-MM-DD'),
+        rooms:  this.state.rooms,
+        adults:  this.state.adults,
+        minors:  this.state.minors
       }
       console.log(this);
       request
@@ -109,8 +108,22 @@ class Sidebar extends Component {
   }
 
   handleInDate(date) {
+    var maxOutDate = date.clone().add(30, 'days');
+    var minOutDate = date.clone();
+    if (this.state.outDate > maxOutDate) {
+      var outDate = null;
+    }
+    else if (this.state.outDate < date) {
+      var outDate = date.clone();
+    }
+    else {
+      var outDate = this.state.outDate;
+    }
     this.setState({
-      inDate: date
+      inDate: date,
+      outDate: outDate,
+      maxOutDate: maxOutDate,
+      minOutDate: minOutDate
     });
   }
 
@@ -126,6 +139,26 @@ class Sidebar extends Component {
     });
   }
 
+  handleRooms(value) {
+    this.setState({
+      rooms: value
+    });
+  }
+
+  handleAdults(value) {
+    this.setState({
+      adults: value
+    });
+  }
+
+  handleMinors(value) {
+    this.setState({
+      minors: value
+    });
+  }
+
+  
+
   validate() {
     var formErrors = this.state.formErrors;
     var valid = true;
@@ -133,18 +166,18 @@ class Sidebar extends Component {
     if (!this.state.origin) {
       formErrors.origin.visible = true;
       formErrors.origin.message = 'Por favor completar este campo';
-      valid = (valid && false);
+      valid = false;
     }
     else {
       formErrors.origin.visible = false;
       formErrors.origin.message = '';
     }
-
+    console.log(this.state.inDate);
     //VALIDATE START DATE
     if (!this.state.inDate) {
       formErrors.inDate.visible = true;
       formErrors.inDate.message = 'Por favor completar este campo';
-      valid = (valid && false);
+      valid = false;
     }
     else {
       formErrors.inDate.visible = false;
@@ -155,11 +188,40 @@ class Sidebar extends Component {
     if (!this.state.outDate) {
       formErrors.outDate.visible = true;
       formErrors.outDate.message = 'Por favor completar este campo';
-      valid = (valid && false);
+      valid = false;
     }
     else {
       formErrors.outDate.visible = false;
       formErrors.outDate.message = '';
+    }
+
+    if (this.state.inDate && this.state.outDate) {
+      var endMoment = this.state.outDate.clone();
+      var startMoment = this.state.inDate.clone();
+
+      if (this.state.outDate.isBefore(this.state.inDate)) {
+        formErrors.outDate.visible = true;
+        formErrors.outDate.message = 'La fecha de salida no puede ser anterior a la de entrada';
+        valid = false;
+      }
+      else if (this.state.inDate.isBefore(moment())) {
+        formErrors.inDate.visible = true;
+        formErrors.inDate.message = 'La fecha de entrada no puede ser anterior a hoy';
+        valid = false;
+      }
+      else if (this.state.inDate.isAfter(moment().add(365, 'days'))) {
+        formErrors.inDate.visible = true;
+        formErrors.inDate.message = 'La fecha de entrada no puede ser posterior a un año de hoy';
+        valid = false;
+      }
+      else if (this.state.outDate.isAfter(startMoment.add(30, 'days'))) {
+        formErrors.outDate.visible = true;
+        formErrors.outDate.message = 'La fecha de salida no puede ser posterior a 30 días de la entrada';
+        valid = false;
+      }
+
+      
+
     }
 
     this.setState({
@@ -168,9 +230,6 @@ class Sidebar extends Component {
     return valid;
   }
 
-  validateOrigin() {
-    
-  }
 
   render() {
     return (
@@ -290,6 +349,10 @@ class TextInput extends Component {
 class Select extends Component {
   constructor(props) {
     super(props);
+    this.handleChange = this.handleChange.bind(this);
+  }
+  handleChange(e) {
+    this.props.onChange(e.target.value);
   }
   render() {
     var options = []
@@ -299,7 +362,7 @@ class Select extends Component {
     return (
       <div>
         <label>{this.props.label}</label>
-        <select>
+        <select onChange={this.handleChange}>
           {options}
         </select>
       </div>
