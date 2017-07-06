@@ -78,6 +78,9 @@ class Sidebar extends Component {
     this.handleInDate = this.handleInDate.bind(this);
     this.handleOutDate = this.handleOutDate.bind(this);
     this.handleOrigin = this.handleOrigin.bind(this);
+    this.handleRooms = this.handleRooms.bind(this);
+    this.handleAdults = this.handleAdults.bind(this);
+    this.handleMinors = this.handleMinors.bind(this);
     this.validate = this.validate.bind(this);
     console.log(props);
   }
@@ -222,9 +225,32 @@ class Sidebar extends Component {
         formErrors.outDate.message = 'La fecha de salida no puede ser posterior a 30 días de la entrada';
         valid = false;
       }
+      else {
+        formErrors.outDate.visible = false;
+        formErrors.outDate.message = '';
+        formErrors.inDate.visible = false;
+        formErrors.inDate.message = '';
+      }
+    }
 
-      
+    if (this.state.rooms > this.state.adults) {
+      formErrors.rooms.visible = true;
+      formErrors.rooms.message = 'No puede haber más habitaciones que adultos';
+      valid = false;
+    }
+    else {
+      formErrors.rooms.visible = false;
+      formErrors.rooms.message = '';
+    }
 
+    if ((this.state.minors + this.state.adults) > 8) {
+      formErrors.adults.visible = true;
+      formErrors.adults.message = 'No puede haber más de 8 personas en total';
+      valid = false;
+    }
+    else {
+      formErrors.adults.visible = false;
+      formErrors.adults.message = '';
     }
 
     this.setState({
@@ -258,7 +284,7 @@ class Sidebar extends Component {
               </div>
               <div className="col-xs-6 reduced-right-padding">
                 <DatePicker 
-                  dateFormat="YYYY/MM/DD" 
+                  dateFormat="DD/MM/YYYY" 
                   onChange={this.handleInDate} 
                   selected={this.state.inDate}
                   minDate={moment()}
@@ -269,7 +295,7 @@ class Sidebar extends Component {
               </div>
               <div className="col-xs-6 reduced-left-padding">
                 <DatePicker 
-                  dateFormat="YYYY/MM/DD" 
+                  dateFormat="DD/MM/YYYY" 
                   onChange={this.handleOutDate} 
                   selected={this.state.outDate}
                   minDate={this.state.minOutDate}
@@ -287,6 +313,9 @@ class Sidebar extends Component {
                   max={8}
                   label="Habitaciones"
                   onChange={this.handleRooms} />
+                <InputError
+                visible={this.state.formErrors.rooms.visible}
+                message={this.state.formErrors.rooms.message} />
               </div>
             </div>
             <div className="row">
@@ -297,6 +326,9 @@ class Sidebar extends Component {
                   max={8}
                   label="Adultos"
                   onChange={this.handleAdults} />
+                <InputError
+                visible={this.state.formErrors.adults.visible}
+                message={this.state.formErrors.adults.message} />
               </div>
               <div className="col-xs-6 reduced-left-padding">
                 <Select 
@@ -305,6 +337,9 @@ class Sidebar extends Component {
                   max={7}
                   label="Menores"
                   onChange={this.handleMinors} />
+                <InputError
+                visible={this.state.formErrors.minors.visible}
+                message={this.state.formErrors.minors.message} />
               </div>
             </div>
             <button className="btn btn-default" onClick={this.handleButtonClick}>Buscar</button>
