@@ -151,22 +151,10 @@ class Sidebar extends Component {
         </div>
         <div className="star-filter">
           <Collapse accordion={true}>
-            <Panel header="hello" headerClass="my-header-class">this is panel content</Panel>
+            <Panel header="Estrellas" headerClass="my-header-class">
+              <StarFilter handleCheckboxClick={this.handleCheckboxClick} />
+            </Panel>
           </Collapse>
-          <div className="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-            <div className="panel panel-default">
-              <div className="panel-heading" role="tab" id="headingOne">
-                <h4 className="panel-title">
-                  <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                    Estrellas
-                  </a>
-                </h4>
-              </div>
-              <div id="collapseOne" className="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
-                <StarFilter handleCheckboxClick={this.handleCheckboxClick} />
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     )
