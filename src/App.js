@@ -9,22 +9,20 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import moment from 'moment';
 import Collapse from 'rc-collapse';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import Loader from 'halogen/ScaleLoader';
 var Panel = Collapse.Panel;
 require('rc-collapse/assets/index.css');
 
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {hotels: {}, stars: {
-        'all': true,
-        5: false,
-        4: false,
-        3: false,
-        2: false,
-        1: false
-      }};
+    this.state = {
+      hotels: [], 
+      loading: false
+    };
     this.handleChange = this.handleChange.bind(this);
-    this.handleCheckboxClick = this.handleCheckboxClick.bind(this);
+    this.handleLoad = this.handleLoad.bind(this);
     //this.state = {hotels: {}};
   }
 
@@ -34,9 +32,9 @@ class App extends Component {
     });
   }
 
-  handleCheckboxClick(value) {
+  handleLoad(value) {
     this.setState({
-      stars: value
+      loading: value
     });
   }
 
@@ -44,8 +42,8 @@ class App extends Component {
     return (
       <div className="container">
         <div className="row">
-          <Sidebar onChange={this.handleChange} handleCheckboxClick={this.handleCheckboxClick} />
-          <HotelList hotels={this.state.hotels} filters={this.state.stars} />
+          <Sidebar onChange={this.handleChange} onLoad={this.handleLoad} />
+          <HotelList hotels={this.state.hotels} loading={this.state.loading} />
         </div>
       </div>
     );
@@ -53,6 +51,109 @@ class App extends Component {
 }
 
 class Sidebar extends Component {
+  constructor(props) {
+    super(props);
+    this.handleCheckboxClick = this.handleCheckboxClick.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleLoad = this.handleLoad.bind(this);
+    this.processHotels = this.processHotels.bind(this);
+    this.state = {
+      hotels: {},
+      hotelsArray: [],
+      starsQuantity: {
+        'all': 0,
+        5: 0,
+        4: 0,
+        3: 0,
+        2: 0,
+        1: 0
+      },
+      starsFilter: {
+        'all': true,
+        5: false,
+        4: false,
+        3: false,
+        2: false,
+        1: false
+      }
+    }
+  }
+
+  processHotels(hotels, starsFilter) {
+    var hotelsArray = [];
+    var starsQuantity = {
+      'all': 0,
+      5: 0,
+      4: 0,
+      3: 0,
+      2: 0,
+      1: 0
+    };
+    for (var i in hotels) {
+      starsQuantity[hotels[i].stars]++;
+      starsQuantity['all']++;
+      if(starsFilter[hotels[i].stars] || starsFilter['all']) {
+        console.log('pushed');
+        hotelsArray.push(<div key={i}><Hotel hotelInfo={hotels[i]} /></div>);
+      }
+    }
+    this.setState({
+      starsQuantity: starsQuantity,
+      hotelsArray: hotelsArray,
+      hotels: hotels,
+      starsFilter: starsFilter
+    });
+    this.props.onChange(hotelsArray);
+  }
+
+  handleCheckboxClick(value) {
+    // this.setState({
+    //   starsFilter: value
+    // });
+    console.log(this.state.starsFilter);
+    if(this.state.hotels) {
+      this.processHotels(this.state.hotels, value);
+    }
+  }
+
+  handleChange(value) {
+    // this.props.onChange(value);
+    // this.setState({
+    //   hotels: value
+    // });
+    this.processHotels(value, this.state.starsFilter);
+  };
+
+  handleLoad(value) {
+    this.props.onLoad(value);
+  }
+
+  render() {
+    return (
+      <div className="col-md-3">
+        <Collapse accordion={true} className="hidden-lg hidden-md form-accordion">
+          <Panel header="Buscador" headerClass="mobile-search">
+            <Form onChange={this.handleChange} onLoad={this.handleLoad} />
+          </Panel>
+        </Collapse>
+        <div className="hidden-sm hidden-xs">
+          <Form onChange={this.handleChange} onLoad={this.handleLoad} />
+        </div>
+        <div className="star-filter">
+
+          <Collapse accordion={true}>
+            <Panel header="Estrellas" headerClass="my-header-class">
+              <StarFilter handleCheckboxClick={this.handleCheckboxClick} starsQuantity={this.state.starsQuantity} />
+            </Panel>
+          </Collapse>
+
+        </div>
+      </div>
+    )
+  }
+}
+
+class Form extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -74,7 +175,6 @@ class Sidebar extends Component {
       }
     };
     this.handleButtonClick = this.handleButtonClick.bind(this);
-    this.handleCheckboxClick = this.handleCheckboxClick.bind(this);
     this.handleInDate = this.handleInDate.bind(this);
     this.handleOutDate = this.handleOutDate.bind(this);
     this.handleOrigin = this.handleOrigin.bind(this);
@@ -82,13 +182,14 @@ class Sidebar extends Component {
     this.handleAdults = this.handleAdults.bind(this);
     this.handleMinors = this.handleMinors.bind(this);
     this.validate = this.validate.bind(this);
-    console.log(props);
   }
 
   handleButtonClick(e) {
     e.preventDefault();
     var valid = this.validate();
     if (valid) {
+      this.props.onLoad(true);
+      this.props.onChange(null);
       var that = this;
       var query = {
         origin: this.state.origin,
@@ -98,19 +199,14 @@ class Sidebar extends Component {
         adults:  this.state.adults,
         minors:  this.state.minors
       }
-      console.log(this);
       request
       .get('https://api.myjson.com/bins/v0sqv')
       .query(query)
       .end(function(err, res){
+        that.props.onLoad(false);
         that.props.onChange(JSON.parse(res.text));
       });
     };
-    
-  }
-
-  handleCheckboxClick(value) {
-    this.props.handleCheckboxClick(value);
   }
 
   handleInDate(date) {
@@ -262,104 +358,89 @@ class Sidebar extends Component {
 
   render() {
     return (
-      <div className="col-md-3">
-        <div className="search-form">
-          <Collapse accordion={true}>
-            <Panel header="Estrellas" headerClass="my-header-class">
-              <StarFilter handleCheckboxClick={this.handleCheckboxClick} />
-            </Panel>
-          </Collapse>
-          <div className="search-form-title">Hoteles</div>
-          <form>
-            <div className="row">
-              <div className="col-xs-12">
-                <TextInput 
-                  containerClasses="col-xs-12"
-                  label="Donde quieres ir?"
-                  placeholder="Donde quieres ir?"
-                  onChange={this.handleOrigin} />
-                <InputError
-                  visible={this.state.formErrors.origin.visible}
-                  message={this.state.formErrors.origin.message} />
-              </div>
+      <div className="search-form">
+        <div className="search-form-title">Hoteles</div>
+        <form>
+          <div className="row">
+            <div className="col-xs-12">
+              <TextInput 
+                containerClasses="col-xs-12"
+                label="Donde quieres ir?"
+                placeholder="Donde quieres ir?"
+                onChange={this.handleOrigin} />
+              <InputError
+                visible={this.state.formErrors.origin.visible}
+                message={this.state.formErrors.origin.message} />
             </div>
-            <div className="row">
-              <div className="col-xs-12">
-                <label for="dest">En que fecha?</label>
-              </div>
-              <div className="col-xs-6 reduced-right-padding">
-                <DatePicker 
-                  dateFormat="DD/MM/YYYY" 
-                  onChange={this.handleInDate} 
-                  selected={this.state.inDate}
-                  minDate={moment()}
-                  maxDate={moment().add(365,'days')} />
-                <InputError
-                visible={this.state.formErrors.inDate.visible}
-                message={this.state.formErrors.inDate.message} />
-              </div>
-              <div className="col-xs-6 reduced-left-padding">
-                <DatePicker 
-                  dateFormat="DD/MM/YYYY" 
-                  onChange={this.handleOutDate} 
-                  selected={this.state.outDate}
-                  minDate={this.state.minOutDate}
-                  maxDate={this.state.maxOutDate} />
-                <InputError
-                visible={this.state.formErrors.outDate.visible}
-                message={this.state.formErrors.outDate.message} />
-              </div>
+          </div>
+          <div className="row">
+            <div className="col-xs-12">
+              <label for="dest">En que fecha?</label>
             </div>
-            <div className="row">
-              <div className="col-xs-6 reduced-right-padding">
-                <Select 
-                  containerClasses="col-xs-6 reduced-right-padding"
-                  min={1}
-                  max={8}
-                  label="Habitaciones"
-                  onChange={this.handleRooms} />
-                <InputError
-                visible={this.state.formErrors.rooms.visible}
-                message={this.state.formErrors.rooms.message} />
-              </div>
+            <div className="col-xs-6 reduced-right-padding">
+              <DatePicker 
+                dateFormat="DD/MM/YYYY" 
+                onChange={this.handleInDate} 
+                selected={this.state.inDate}
+                minDate={moment()}
+                maxDate={moment().add(365,'days')} />
+              <InputError
+              visible={this.state.formErrors.inDate.visible}
+              message={this.state.formErrors.inDate.message} />
             </div>
-            <div className="row">
-              <div className="col-xs-6 reduced-right-padding">
-                <Select 
-                  containerClasses="col-xs-6 reduced-right-padding"
-                  min={1}
-                  max={8}
-                  label="Adultos"
-                  onChange={this.handleAdults} />
-                <InputError
-                visible={this.state.formErrors.adults.visible}
-                message={this.state.formErrors.adults.message} />
-              </div>
-              <div className="col-xs-6 reduced-left-padding">
-                <Select 
-                  containerClasses="col-xs-6 reduced-left-padding"
-                  min={0}
-                  max={7}
-                  label="Menores"
-                  onChange={this.handleMinors} />
-                <InputError
-                visible={this.state.formErrors.minors.visible}
-                message={this.state.formErrors.minors.message} />
-              </div>
+            <div className="col-xs-6 reduced-left-padding">
+              <DatePicker 
+                dateFormat="DD/MM/YYYY" 
+                onChange={this.handleOutDate} 
+                selected={this.state.outDate}
+                minDate={this.state.minOutDate}
+                maxDate={this.state.maxOutDate} />
+              <InputError
+              visible={this.state.formErrors.outDate.visible}
+              message={this.state.formErrors.outDate.message} />
             </div>
-            <button className="btn btn-default" onClick={this.handleButtonClick}>Buscar</button>
-          </form>
-        </div>
-        <div className="star-filter">
-
-          <Collapse accordion={true}>
-            <Panel header="Estrellas" headerClass="my-header-class">
-              <StarFilter handleCheckboxClick={this.handleCheckboxClick} />
-            </Panel>
-          </Collapse>
-
-        </div>
+          </div>
+          <div className="row">
+            <div className="col-xs-6 reduced-right-padding">
+              <Select 
+                containerClasses="col-xs-6 reduced-right-padding"
+                min={1}
+                max={8}
+                label="Habitaciones"
+                onChange={this.handleRooms} />
+              <InputError
+              visible={this.state.formErrors.rooms.visible}
+              message={this.state.formErrors.rooms.message} />
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-xs-6 reduced-right-padding">
+              <Select 
+                containerClasses="col-xs-6 reduced-right-padding"
+                min={1}
+                max={8}
+                label="Adultos"
+                onChange={this.handleAdults} />
+              <InputError
+              visible={this.state.formErrors.adults.visible}
+              message={this.state.formErrors.adults.message} />
+            </div>
+            <div className="col-xs-6 reduced-left-padding">
+              <Select 
+                containerClasses="col-xs-6 reduced-left-padding"
+                min={0}
+                max={7}
+                label="Menores"
+                onChange={this.handleMinors} />
+              <InputError
+              visible={this.state.formErrors.minors.visible}
+              message={this.state.formErrors.minors.message} />
+            </div>
+          </div>
+          <button className="btn btn-default" onClick={this.handleButtonClick}>Buscar</button>
+        </form>
       </div>
+        
     )
   }
 }
@@ -459,7 +540,7 @@ class StarFilter extends Component {
               <span className="stars">
                 {starIcons}
               </span>
-              <span className="quantity">3</span>
+              <span className="quantity">{this.props.starsQuantity[i]}</span>
             </label>
           </li>
         ));
@@ -474,7 +555,7 @@ class StarFilter extends Component {
             <span>
               Todas las estrellas
             </span>
-            <span className="quantity-all">3</span>
+            <span className="quantity-all">{this.props.starsQuantity['all']}</span>
           </label>
         </li>
         {starsArray}
@@ -485,20 +566,34 @@ class StarFilter extends Component {
 
 class HotelList extends Component {
   render() {
-    console.log(this.props.filters);
-    var json = this.props.hotels;
-    var hotelArray = [];
-    for (var i in json) {
-      console.log(this.props.filters[json[i].stars]);
-      if(this.props.filters[json[i].stars] || this.props.filters['all']) {
-        hotelArray.push(<Hotel hotelInfo={json[i]} />);
-      }
+    // console.log(this.props.filters);
+    // var json = this.props.hotels;
+    // var hotelArray = [];
+    // for (var i in json) {
+    //   console.log(this.props.filters[json[i].stars]);
+    //   if(this.props.filters[json[i].stars] || this.props.filters['all']) {
+    //     hotelArray.push(<div key={i}><Hotel hotelInfo={json[i]} /></div>);
+    //   }
+    // }
+    if (this.props.loading) {
+      return(
+        <div className="loader col-md-9">
+          <Loader color="#0050d0" size="3em" margin="4px"/>
+        </div>
+      )
     }
-    return (
-      <div className="col-md-9" id="hotel-card-container">
-        {hotelArray}
-      </div>
-    );
+    else {
+      return (
+        <div className="col-md-9" id="hotel-card-container">
+          <ReactCSSTransitionGroup
+            transitionName="example"
+            transitionEnterTimeout={500}
+            transitionLeaveTimeout={300}>
+            {this.props.hotels}
+          </ReactCSSTransitionGroup>
+        </div>
+      )
+    }
   }
 }
 

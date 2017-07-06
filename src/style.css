@@ -85,6 +85,10 @@ body {
 	color: white;
 }
 
+.form-accordion .rc-collapse-content-box {
+	margin: 0!important;
+}
+
 .star-filter {
 	margin-top: 15px;
 	margin-bottom: 15px;
@@ -114,8 +118,8 @@ body {
 	content: '\f077'!important;
 }
 
-.star-filter .rc-collapse-content {
-	padding: 0;
+.rc-collapse-content {
+	padding: 0!important;
 }
 
 .star-filter .list-group-item {
@@ -150,6 +154,11 @@ body {
 .star-filter .quantity-all {
 	background-color: #2d72e1;
 	color: white;
+}
+
+.loader {
+	margin: 20px auto;
+	text-align: center;
 }
 
 .hotel-card {
@@ -260,7 +269,6 @@ body {
 	}
 }
 
-
 @media (max-width: 768px) {
 	.hotel-card .hotel-name {
 		font-size: 2.25rem;
@@ -273,6 +281,23 @@ body {
 	}
 }
 
+.example-enter {
+  opacity: 0.01;
+}
+
+.example-enter.example-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}
+
+.example-leave {
+  opacity: 1;
+}
+
+.example-leave.example-leave-active {
+  opacity: 0.01;
+  transition: opacity 300ms ease-in;
+}
 
 
 /* Datepicker >>>> */
