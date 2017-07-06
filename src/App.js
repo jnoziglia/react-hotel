@@ -7,6 +7,7 @@ import './font-awesome.min.css';
 import request from 'superagent';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import moment from 'moment';
 import Collapse from 'rc-collapse';
 var Panel = Collapse.Panel;
 require('rc-collapse/assets/index.css');
@@ -54,36 +55,124 @@ class App extends Component {
 class Sidebar extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      inDate: null,
+      outDate: null,
+      minOutDate: moment(),
+      maxOutDate: moment().add(30, 'days'),
+      origin: '',
+      rooms: 1,
+      adults: 1,
+      minors: 0,
+      formErrors: {
+        origin: {visible: false, message: ''},
+        inDate: {visible: false, message: ''},
+        outDate: {visible: false, message: ''},
+        rooms: {visible: false, message: ''},
+        adults: {visible: false, message: ''},
+        minors: {visible: false, message: ''}
+      }
+    };
     this.handleButtonClick = this.handleButtonClick.bind(this);
     this.handleCheckboxClick = this.handleCheckboxClick.bind(this);
+    this.handleInDate = this.handleInDate.bind(this);
+    this.handleOutDate = this.handleOutDate.bind(this);
+    this.handleOrigin = this.handleOrigin.bind(this);
+    this.validate = this.validate.bind(this);
+    this.validateOrigin = this.validateOrigin.bind(this);
     console.log(props);
   }
 
   handleButtonClick(e) {
     e.preventDefault();
-    var that = this;
-    var query = {
-      origin: 'asd',
-      start: 'asd',
-      end: 'asd',
-      rooms: 'asd',
-      adults: 'asd',
-      minors: 'asd'
+    var valid = this.validate();
+    if (valid) {
+      var that = this;
+      var query = {
+        origin: this.state.origin,
+        start: 'asd',
+        end: 'asd',
+        rooms: 'asd',
+        adults: 'asd',
+        minors: 'asd'
+      }
+      console.log(this);
+      request
+      .get('https://api.myjson.com/bins/v0sqv')
+      .query(query)
+      .end(function(err, res){
+        that.props.onChange(JSON.parse(res.text));
+      });
     };
-    console.log(this);
-    request
-    .get('https://api.myjson.com/bins/v0sqv')
-    .query(query)
-    .end(function(err, res){
-      console.log(res.text);
-      console.log(that);
-      
-      that.props.onChange(JSON.parse(res.text));
-    });
+    
   }
 
   handleCheckboxClick(value) {
     this.props.handleCheckboxClick(value);
+  }
+
+  handleInDate(date) {
+    this.setState({
+      inDate: date
+    });
+  }
+
+  handleOutDate(date) {
+    this.setState({
+      outDate: date
+    });
+  }
+
+  handleOrigin(value) {
+    this.setState({
+      origin: value
+    });
+  }
+
+  validate() {
+    var formErrors = this.state.formErrors;
+    var valid = true;
+    // VALIDATE ORIGIN
+    if (!this.state.origin) {
+      formErrors.origin.visible = true;
+      formErrors.origin.message = 'Por favor completar este campo';
+      valid = (valid && false);
+    }
+    else {
+      formErrors.origin.visible = false;
+      formErrors.origin.message = '';
+    }
+
+    //VALIDATE START DATE
+    if (!this.state.inDate) {
+      formErrors.inDate.visible = true;
+      formErrors.inDate.message = 'Por favor completar este campo';
+      valid = (valid && false);
+    }
+    else {
+      formErrors.inDate.visible = false;
+      formErrors.inDate.message = '';
+    }
+
+    //VALIDATE END DATE
+    if (!this.state.outDate) {
+      formErrors.outDate.visible = true;
+      formErrors.outDate.message = 'Por favor completar este campo';
+      valid = (valid && false);
+    }
+    else {
+      formErrors.outDate.visible = false;
+      formErrors.outDate.message = '';
+    }
+
+    this.setState({
+      formErrors: formErrors
+    });
+    return valid;
+  }
+
+  validateOrigin() {
+    
   }
 
   render() {
@@ -94,8 +183,14 @@ class Sidebar extends Component {
           <form>
             <div className="row">
               <div className="col-xs-12">
-                <label for="dest">Donde quieres ir?</label>
-                <input type="text" className="form-control" id="dest" placeholder="Donde quieres ir?" />
+                <TextInput 
+                  containerClasses="col-xs-12"
+                  label="Donde quieres ir?"
+                  placeholder="Donde quieres ir?"
+                  onChange={this.handleOrigin} />
+                <InputError
+                  visible={this.state.formErrors.origin.visible}
+                  message={this.state.formErrors.origin.message} />
               </div>
             </div>
             <div className="row">
@@ -103,60 +198,119 @@ class Sidebar extends Component {
                 <label for="dest">En que fecha?</label>
               </div>
               <div className="col-xs-6 reduced-right-padding">
-                <DatePicker dateFormat="YYYY-MM-DD" />
+                <DatePicker 
+                  dateFormat="YYYY/MM/DD" 
+                  onChange={this.handleInDate} 
+                  selected={this.state.inDate}
+                  minDate={moment()}
+                  maxDate={moment().add(365,'days')} />
+                <InputError
+                visible={this.state.formErrors.inDate.visible}
+                message={this.state.formErrors.inDate.message} />
               </div>
               <div className="col-xs-6 reduced-left-padding">
-                <DatePicker dateFormat="YYYY-MM-DD" />
+                <DatePicker 
+                  dateFormat="YYYY/MM/DD" 
+                  onChange={this.handleOutDate} 
+                  selected={this.state.outDate}
+                  minDate={this.state.minOutDate}
+                  maxDate={this.state.maxOutDate} />
+                <InputError
+                visible={this.state.formErrors.outDate.visible}
+                message={this.state.formErrors.outDate.message} />
               </div>
             </div>
             <div className="row">
               <div className="col-xs-6 reduced-right-padding">
-                <label for="dest">Habitaciones</label>
-                <select>
-                  <option value="1">1</option>
-                </select>
+                <Select 
+                  containerClasses="col-xs-6 reduced-right-padding"
+                  min={1}
+                  max={8}
+                  label="Habitaciones"
+                  onChange={this.handleRooms} />
               </div>
             </div>
             <div className="row">
               <div className="col-xs-6 reduced-right-padding">
-                <label for="dest">Adultos</label>
-                <select>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-                  <option value="6">6</option>
-                  <option value="7">7</option>
-                  <option value="8">8</option>
-                </select>
+                <Select 
+                  containerClasses="col-xs-6 reduced-right-padding"
+                  min={1}
+                  max={8}
+                  label="Adultos"
+                  onChange={this.handleAdults} />
               </div>
               <div className="col-xs-6 reduced-left-padding">
-                <label for="dest">Menores</label>
-                <select>
-                  <option value="0">0</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-                  <option value="6">6</option>
-                  <option value="7">7</option>
-                  <option value="8">8</option>
-                </select>
+                <Select 
+                  containerClasses="col-xs-6 reduced-left-padding"
+                  min={0}
+                  max={7}
+                  label="Menores"
+                  onChange={this.handleMinors} />
               </div>
             </div>
             <button className="btn btn-default" onClick={this.handleButtonClick}>Buscar</button>
           </form>
         </div>
         <div className="star-filter">
+
           <Collapse accordion={true}>
             <Panel header="Estrellas" headerClass="my-header-class">
               <StarFilter handleCheckboxClick={this.handleCheckboxClick} />
             </Panel>
           </Collapse>
+
         </div>
       </div>
+    )
+  }
+}
+
+class TextInput extends Component {
+  constructor(props) {
+    super(props);
+    this.handleChange = this.handleChange.bind(this);
+  }
+  handleChange(e) {
+    this.props.onChange(e.target.value);
+  }
+  render() {
+    return(
+      <div>
+        <label for="dest">{this.props.label}</label>
+        <input type="text" className="form-control" id="dest" placeholder={this.props.placeholder} onChange={this.handleChange} />
+      </div>
+    )
+  }
+}
+
+class Select extends Component {
+  constructor(props) {
+    super(props);
+  }
+  render() {
+    var options = []
+    for (var i = this.props.min; i <= this.props.max; i++) {
+      options.push(<option value={i}>{i}</option>);
+    }
+    return (
+      <div>
+        <label>{this.props.label}</label>
+        <select>
+          {options}
+        </select>
+      </div>
+    )
+  }
+}
+
+class InputError extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return(
+      <div className={this.props.visible ? '' : 'hidden'}>{this.props.message}</div>
     )
   }
 }
