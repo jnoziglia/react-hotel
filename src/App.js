@@ -8,6 +8,9 @@ import request from 'superagent';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import moment from 'moment';
+import Collapse from 'rc-collapse';
+var Panel = Collapse.Panel;
+require('rc-collapse/assets/index.css');
 
 class App extends Component {
   constructor(props) {
@@ -308,20 +311,13 @@ class Sidebar extends Component {
           </form>
         </div>
         <div className="star-filter">
-          <div className="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-            <div className="panel panel-default">
-              <div className="panel-heading" role="tab" id="headingOne">
-                <h4 className="panel-title">
-                  <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                    Estrellas
-                  </a>
-                </h4>
-              </div>
-              <div id="collapseOne" className="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
-                <StarFilter handleCheckboxClick={this.handleCheckboxClick} />
-              </div>
-            </div>
-          </div>
+
+          <Collapse accordion={true}>
+            <Panel header="Estrellas" headerClass="my-header-class">
+              <StarFilter handleCheckboxClick={this.handleCheckboxClick} />
+            </Panel>
+          </Collapse>
+
         </div>
       </div>
     )

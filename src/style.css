@@ -89,6 +89,34 @@ body {
 	margin-top: 15px;
 }
 
+.star-filter .rc-collapse > .rc-collapse-item > .rc-collapse-header .arrow {
+	position: relative;
+	float: right;
+	width: 22px;
+	height: 18px;
+	border: none;
+	font-family: FontAwesome;
+	font-style: normal;
+	font-size: 18px;
+	line-height: 36px;
+	margin:0;
+}
+
+.star-filter .rc-collapse > .rc-collapse-item > .rc-collapse-header .arrow:before,
+.rc-collapse > .rc-collapse-item-active > .rc-collapse-header .arrow:before {
+	position: absolute;
+	content: '\f078';
+	left: -100%;
+}
+
+.rc-collapse > .rc-collapse-item-active > .rc-collapse-header .arrow:before {
+	content: '\f077'!important;
+}
+
+.star-filter .list-group-item {
+	border: none;
+}
+
 .star-filter input[type="checkbox"] {
 	margin: 5px 10px 0 0;
 }
