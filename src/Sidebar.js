@@ -3,7 +3,6 @@ import StarFilter from './StarFilter.js';
 import Form from './Form.js';
 import Hotel from './Hotel.js';
 import Collapse, {Panel} from 'rc-collapse';
-//var Panel = Collapse.Panel;
 require('rc-collapse/assets/index.css');
 
 class Sidebar extends Component {
@@ -49,7 +48,6 @@ class Sidebar extends Component {
       starsQuantity[hotels[i].stars]++;
       starsQuantity['all']++;
       if(starsFilter[hotels[i].stars] || starsFilter['all']) {
-        console.log('pushed');
         hotelsArray.push(<div key={i}><Hotel hotelInfo={hotels[i]} /></div>);
       }
     }
@@ -63,20 +61,12 @@ class Sidebar extends Component {
   }
 
   handleCheckboxClick(value) {
-    // this.setState({
-    //   starsFilter: value
-    // });
-    console.log(this.state.starsFilter);
     if(this.state.hotels) {
       this.processHotels(this.state.hotels, value);
     }
   }
 
   handleChange(value) {
-    // this.props.onChange(value);
-    // this.setState({
-    //   hotels: value
-    // });
     this.processHotels(value, this.state.starsFilter);
   };
 

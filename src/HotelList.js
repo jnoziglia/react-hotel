@@ -5,15 +5,6 @@ import Loader from 'halogen/ScaleLoader';
 
 class HotelList extends Component {
   render() {
-    // console.log(this.props.filters);
-    // var json = this.props.hotels;
-    // var hotelArray = [];
-    // for (var i in json) {
-    //   console.log(this.props.filters[json[i].stars]);
-    //   if(this.props.filters[json[i].stars] || this.props.filters['all']) {
-    //     hotelArray.push(<div key={i}><Hotel hotelInfo={json[i]} /></div>);
-    //   }
-    // }
     if (this.props.loading) {
       return(
         <div className="loader col-md-9">

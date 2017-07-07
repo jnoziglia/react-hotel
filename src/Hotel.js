@@ -20,20 +20,20 @@ class Hotel extends Component {
               </span>
               <span className="distance">{this.formatDistance(this.props.hotelInfo.distanceFromDowntown)} del centro</span>
             </div>
-            <div className="reccomend">{this.props.hotelInfo.recomendations} lo recomendo</div>
+            <div className="reccomend">{this.props.hotelInfo.recomendations} lo recomendó</div>
             <div className="rooms-left">{this.formatRooms(this.props.hotelInfo.availableRooms)}</div>
             <div className="time-left">{this.formatTimeLeft(this.props.hotelInfo.availabilityTime)}</div>
           </div>
           <div className="col-sm-3 hotel-info-right">
             <div className="free-cancel">{this.formatCancelation(this.props.hotelInfo.freeCancelation)}</div>
-            <div className="room-night">Habitacion por noche</div>
+            <div className="room-night">Habitación por noche</div>
             <div className="taxes">Impuestos y tasas no incluidos</div>
             <div className="old-price">{this.formatPrice(this.props.hotelInfo.oldPrice)}</div>
             <div className="price">{this.formatPrice(this.props.hotelInfo.price)}</div>
             <div className="details">
               <button className="btn btn-default">Ver detalle</button>
             </div>
-            <div className="payment-type">Paga al hotel o hasta en 50 cuotas!</div>
+            <div className="payment-type">¡Pagá al hotel o hasta en 50 cuotas!</div>
           </div>
         </div>
       </div>
@@ -69,11 +69,11 @@ class Hotel extends Component {
   formatRooms(roomsLeft) {
     switch(roomsLeft) {
       case 1:
-        return 'Ultima oportunidad! Queda una sola habitacion!';
+        return '¡Última oportunidad! ¡Queda una sola habitacion!';
       case null:
         break;
       default:
-        return 'Ultimas '+roomsLeft+' habitaciones';
+        return 'Últimas '+roomsLeft+' habitaciones';
     }
   }
 

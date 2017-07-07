@@ -41,6 +41,7 @@ class Form extends Component {
     e.preventDefault();
     var valid = this.validate();
     if (valid) {
+      // Show loader - Hide hotels
       this.props.onLoad(true);
       this.props.onChange(null);
       var that = this;
@@ -52,10 +53,12 @@ class Form extends Component {
         adults:  this.state.adults,
         minors:  this.state.minors
       }
+      // Send request
       request
       .get('https://api.myjson.com/bins/v0sqv')
       .query(query)
       .end(function(err, res){
+        // Hide loader - Show hotels
         that.props.onLoad(false);
         that.props.onChange(JSON.parse(res.text));
       });
@@ -128,7 +131,7 @@ class Form extends Component {
   validate() {
     var formErrors = this.state.formErrors;
     var valid = true;
-    // VALIDATE ORIGIN
+    // VALIDATE ORIGIN (EMPTY)
     if (!this.state.origin) {
       formErrors.origin.visible = true;
       formErrors.origin.message = 'Por favor completar este campo';
@@ -138,8 +141,7 @@ class Form extends Component {
       formErrors.origin.visible = false;
       formErrors.origin.message = '';
     }
-    console.log(this.state.inDate);
-    //VALIDATE START DATE
+    //VALIDATE START DATE (EMPTY)
     if (!this.state.inDate) {
       formErrors.inDate.visible = true;
       formErrors.inDate.message = 'Por favor completar este campo';
@@ -150,7 +152,7 @@ class Form extends Component {
       formErrors.inDate.message = '';
     }
 
-    //VALIDATE END DATE
+    //VALIDATE END DATE (EMPTY)
     if (!this.state.outDate) {
       formErrors.outDate.visible = true;
       formErrors.outDate.message = 'Por favor completar este campo';
@@ -161,6 +163,7 @@ class Form extends Component {
       formErrors.outDate.message = '';
     }
 
+    // VALIDATE START AND END DATE RESTRICTIONS
     if (this.state.inDate && this.state.outDate) {
       var endMoment = this.state.outDate.clone();
       var startMoment = this.state.inDate.clone();
@@ -193,6 +196,7 @@ class Form extends Component {
       }
     }
 
+    // VALIDATE ROOMS RESTRICTIONS
     if (this.state.rooms > this.state.adults) {
       formErrors.rooms.visible = true;
       formErrors.rooms.message = 'No puede haber más habitaciones que adultos';
@@ -203,6 +207,7 @@ class Form extends Component {
       formErrors.rooms.message = '';
     }
 
+    // VALIDATE GUESTS RESTRICTIONS
     if ((Number(this.state.minors) + Number(this.state.adults)) > 8) {
       formErrors.adults.visible = true;
       formErrors.adults.message = 'No puede haber más de 8 personas en total';
@@ -239,7 +244,7 @@ class Form extends Component {
           </div>
           <div className="row">
             <div className="col-xs-12">
-              <label>En que fecha?</label>
+              <label>¿En qué fecha?</label>
             </div>
             <div className="col-xs-6 reduced-right-padding">
               <DatePicker 

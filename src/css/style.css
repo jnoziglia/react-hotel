@@ -148,6 +148,8 @@ body {
 
 /* <<<< Form */
 
+/* >>>> Filters */
+
 .star-accordion {
 	border-top: 1px solid #d9d9d9;
 	border-bottom: 1px solid #d9d9d9;
@@ -197,10 +199,40 @@ body {
 	color: white;
 }
 
+/* <<<< Filters */
+
+/* >>>> Loader */
+
 .loader {
 	margin: 20px auto;
 	text-align: center;
 }
+
+/* <<<< Loader */
+
+/* >>>> Animations (Hotels) */
+
+.example-enter {
+  opacity: 0.01;
+}
+
+.example-enter.example-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}
+
+.example-leave {
+  opacity: 1;
+}
+
+.example-leave.example-leave-active {
+  opacity: 0.01;
+  transition: opacity 300ms ease-in;
+}
+
+/* <<<< Animations (Hotels) */
+
+/* >>>> Hotel Cards */
 
 .hotel-card {
 	margin-bottom: 15px;
@@ -240,7 +272,6 @@ body {
 
 .hotel-card .hotel-name {
 	font-size: 2.25rem;
-	/*line-height: 2.75rem;*/
 	padding-left: 10px;
 }
 
@@ -335,6 +366,9 @@ body {
 	line-height: 1;
 }
 
+/* <<<< Hotel Cards */
+
+/* >>>> Media Queries */
 
 @media (min-width: 991px) {
 	.hotel-card .hotel-info-right {
@@ -354,23 +388,7 @@ body {
 	}
 }
 
-.example-enter {
-  opacity: 0.01;
-}
-
-.example-enter.example-enter-active {
-  opacity: 1;
-  transition: opacity 500ms ease-in;
-}
-
-.example-leave {
-  opacity: 1;
-}
-
-.example-leave.example-leave-active {
-  opacity: 0.01;
-  transition: opacity 300ms ease-in;
-}
+/* <<<< Media Queries */
 
 
 /* Collapse >>>> */
