@@ -1,3 +1,11 @@
+**Evaluación técnica Frontend Developer (SSr)**
+-------------------------------------------
+-------------------------------------------
+
+Examen de tecnologías “Client Side” para postulantes
+----------------------------------------------------
+----------------------------------------------------
+
 Objetivos:
 ----------
 La finalidad de esta página, es simular una búsqueda de hoteles. El usuario tiene que poder ingresar los parámetros de su reserva en la caja de búsqueda, y al hacer click en “Buscar”, los resultados deberán mostrarse en la misma página, sin hacer una recarga completa del documento principal (debe funcionar como una “Single Page Application”), realizando un request Ajax a un servicio ficticio de búsqueda de hoteles. Esta página también tiene que implementar un filtro por cantidad de estrellas, para permitirle al usuario mostrar/ocultar, los hoteles según este parámetro. Si lo considera necesario, se pueden usar bibliotecas o frameworks desarrollados por terceros (JQuery, Angular, React, Backbone, Mustache, Handlebars, Grunt, Gulp, WebPack, etc.). Se valorará si se aclaran los motivos para la elección las librerías o frameworks usados. Para este ejercicio, no es necesario implementar el servicio que responda los requests Ajax con los resultados de las búsquedas. Por lo que se pueden usar servicios como [http://myjson.com/](http://myjson.com/) que permiten subir JSONs consumibles via Ajax.
@@ -98,6 +106,13 @@ Dentro de los archivos se encuentran por un lado el código fuente y por otro la
 En mi caso utilicé `npm` y `serve`.
 Pasos para la instalación de `npm` y `serve`:
 1. Instalar NodeJS (puede ser descargado de acá [https://nodejs.org/es/](https://nodejs.org/es/)).
-2. Correr el comando `npm install -g serve` para instalar serve.
-3. Ingresar a la carpeta build y correr el comando `serve -s`.
-4. Ingresando a la dirección indicada en consola se podrá utilizar la aplicación (corre por defecto en [http://localhost:5000/](http://localhost:5000/)).
+2. Descomprimir el archivo enviado e ingresar en la carpeta raíz de la aplicación.
+3. Correr el comando `npm install -g serve` para instalar serve.
+4. Ingresar a la carpeta build y correr el comando `serve -s` o desde la carpeta raíz de la aplicación utilizar el comando `serve -s build`.
+5. Ingresando a la dirección indicada en consola se podrá utilizar la aplicación (corre por defecto en [http://localhost:5000/](http://localhost:5000/)).
+
+Uso
+---
+ - Al ingresar se mostrará una pantalla con el buscador y los filtros.
+ - Ingresar los datos deseados y hacer click en buscar. Esto hará un request a [http://myjson.com/](http://myjson.com/) devolviendo los resultados.
+ - Clickear en los filtros para elegir que resultados mostrar. No hay restricciones realizadas sobre estos, por lo que se puede seleccionar tanto todos juntos como ninguno.

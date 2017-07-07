@@ -243,13 +243,13 @@ body {
 }
 
 .hotel-card .hotel-info-left {
-	margin: 10px 0 5px;
+	margin: 10px 0 15px;
 	background-color: white;
 }
 
 .hotel-card .hotel-rating {
 	position: relative;
-  top: -0.4rem;
+  	top: -0.4rem;
 	padding: 7px 5px;
 	color: white;
 }
@@ -271,7 +271,7 @@ body {
 }
 
 .hotel-card .hotel-name {
-	font-size: 2.25rem;
+	font-size: 2.10rem;
 	padding-left: 10px;
 }
 
